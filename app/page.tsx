@@ -28,7 +28,7 @@ const maintenanceIconSvg = `
  * Header Component
  * Displays the navigation bar, company title, and description.
  */
-const Header = ({ companyInfo }) => {
+const Header = ({ companyInfo }: { companyInfo: { name: string; description: string } }) => {
     return (
         <header className="bg-white shadow-md">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -62,7 +62,7 @@ const Header = ({ companyInfo }) => {
  * Renders an interactive map with markers for each factory.
  * NOTE: This component is client-side only.
  */
-const MapComponent = ({ factories }) => {
+const MapComponent = ({ factories }: { factories: any[] }) => {
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
@@ -134,12 +134,12 @@ const MapComponent = ({ factories }) => {
  * MonthlyPerformanceChart Component
  * Renders a bar chart showing the monthly production data for three selected factories.
  */
-const MonthlyPerformanceChart = ({ data }) => {
+const MonthlyPerformanceChart = ({ data }: { data: any }) => {
     // Select the first three factories with production data
     const factories = data.factory_data.slice(0, 3);
 
     // Combine the monthly data from the selected factories into a single array
-    const combinedData = factories[0].production_level_2024.map((monthData, index) => {
+    const combinedData = factories[0].production_level_2024.map((monthData: { month: string | any[]; value: any; }, index: string | number) => {
         const obj = {
             month: monthData.month.slice(0, 3), // Shorten month name for X-axis
             [`Factory ${factories[0].name.split(' ')[2]}`]: monthData.value,
@@ -150,7 +150,7 @@ const MonthlyPerformanceChart = ({ data }) => {
     });
 
     // Custom Tooltip component to display full names
-    const CustomTooltip = ({ active, payload, label }) => {
+    const CustomTooltip = ({ active, payload, label }: { active: boolean; payload: any[]; label: string }) => {
         if (active && payload && payload.length) {
             return (
                 <div className="bg-white p-2 border border-gray-300 rounded shadow-lg text-sm">
@@ -178,7 +178,7 @@ const MonthlyPerformanceChart = ({ data }) => {
                         >
                             <XAxis dataKey="month" label={{ value: 'Month', position: 'insideBottom', offset: -5 }} />
                             <YAxis label={{ value: 'Production (Tons)', angle: -90, position: 'insideLeft' }} />
-                            <Tooltip content={<CustomTooltip />} />
+                            <Tooltip content={<CustomTooltip active={false} payload={[]} label={''} />} />
                             <Legend wrapperStyle={{ paddingTop: 20 }} />
                             <Bar dataKey={`Factory ${factories[0].name.split(' ')[2]}`} fill="#8884d8" />
                             <Bar dataKey={`Factory ${factories[1].name.split(' ')[2]}`} fill="#82ca9d" />
